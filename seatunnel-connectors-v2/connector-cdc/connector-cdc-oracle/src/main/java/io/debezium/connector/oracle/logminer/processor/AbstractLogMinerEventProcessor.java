@@ -16,6 +16,8 @@
  */
 package io.debezium.connector.oracle.logminer.processor;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,7 @@ import io.debezium.relational.TableId;
 import io.debezium.util.Clock;
 import io.debezium.util.Strings;
 
+import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +63,7 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -265,12 +269,21 @@ public abstract class AbstractLogMinerEventProcessor<T extends AbstractTransacti
      */
     protected void processResults(OraclePartition partition, ResultSet resultSet)
             throws SQLException, InterruptedException {
+        String charset =
+                Optional.ofNullable(connectorConfig.getTableStringEncoding())
+                        .orElse(
+                                Optional.ofNullable(System.getProperty("table_string_encoding"))
+                                        .orElse(System.getenv("table_string_encoding")));
+
         while (context.isRunning() && hasNextWithMetricsUpdate(resultSet)) {
             counters.rows++;
             processRow(
                     partition,
                     LogMinerEventRow.fromResultSet(
-                            resultSet, getConfig().getCatalogName(), isTrxIdRawValue()));
+                            resultSet,
+                            getConfig().getCatalogName(),
+                            isTrxIdRawValue(),
+                            StringUtils.isEmpty(charset) ? null : Charset.forName(charset)));
         }
     }
 
