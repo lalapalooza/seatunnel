@@ -185,4 +185,11 @@ public class JdbcSourceOptions extends JdbcCommonOptions {
                             "Whether to enable concurrent read with split during snapshot phase. "
                                     + "When set to false, the source reads the table as a single split "
                                     + "without any split analysis, which is useful for tables without indexes.");
+                                    
+    public static final Option<String> STRING_MANDATORY_ENCODING =
+            Options.key("string_mandatory_encoding")
+                    .stringType()
+                    .noDefaultValue()
+                    .withDescription(
+                            "Specify an encoding to force re-encoding of string type fields");
 }

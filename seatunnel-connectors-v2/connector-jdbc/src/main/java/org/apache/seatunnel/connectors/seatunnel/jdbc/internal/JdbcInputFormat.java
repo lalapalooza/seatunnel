@@ -32,7 +32,6 @@ import org.apache.seatunnel.connectors.seatunnel.jdbc.internal.dialect.JdbcDiale
 import org.apache.seatunnel.connectors.seatunnel.jdbc.internal.dialect.JdbcDialectLoader;
 import org.apache.seatunnel.connectors.seatunnel.jdbc.source.ChunkSplitter;
 import org.apache.seatunnel.connectors.seatunnel.jdbc.source.JdbcSourceSplit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +84,7 @@ public class JdbcInputFormat implements Serializable {
         this.jdbcDialect = jdbcDialect;
         this.chunkSplitter = chunkSplitter;
         this.jdbcRowConverter = jdbcDialect.getRowConverter();
+        this.jdbcRowConverter.setStringMandatoryEncoding(config.getStringMandatoryEncoding());
         this.tables = tables;
         this.configuredAutoCommit = configuredAutoCommit;
     }

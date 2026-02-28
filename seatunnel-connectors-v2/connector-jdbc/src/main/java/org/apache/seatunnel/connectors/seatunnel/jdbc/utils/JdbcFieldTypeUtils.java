@@ -16,7 +16,10 @@
  */
 package org.apache.seatunnel.connectors.seatunnel.jdbc.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,6 +85,31 @@ public final class JdbcFieldTypeUtils {
                 blob.free();
             }
         }
+
+        return resultSet.getString(columnIndex);
+    }
+
+    public static String getString(ResultSet resultSet, int columnIndex, String mandatoryEncoding)
+            throws SQLException {
+        Object obj = resultSet.getObject(columnIndex);
+        if (obj == null) {
+            return null;
+        }
+
+        // Add special handling for the BLOB data type.
+        if (obj instanceof java.sql.Blob) {
+            java.sql.Blob blob = (java.sql.Blob) obj;
+            try {
+                byte[] bytes = blob.getBytes(1, (int) blob.length());
+                return new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+            } finally {
+                blob.free();
+            }
+        }
+        if (StringUtils.isNoneEmpty(mandatoryEncoding)) {
+            return new String(resultSet.getBytes(columnIndex), Charset.forName(mandatoryEncoding));
+        }
+
         return resultSet.getString(columnIndex);
     }
 
