@@ -100,14 +100,14 @@ public class JdbcCommonOptions {
     public static final Option<Boolean> DECIMAL_TYPE_NARROWING =
             Options.key("decimal_type_narrowing")
                     .booleanType()
-                    .defaultValue(true)
+                    .defaultValue(false)
                     .withDescription(
                             "decimal type narrowing, if true, the decimal type will be narrowed to the int or long type if without loss of precision. Only support for Oracle at now.");
 
     public static final Option<Boolean> INT_TYPE_NARROWING =
             Options.key("int_type_narrowing")
                     .booleanType()
-                    .defaultValue(true)
+                    .defaultValue(false)
                     .withDescription(
                             "int type narrowing, if true, the tinyint(1) type will be narrowed to the boolean type if without loss of precision. Support for MySQL at now.");
 
