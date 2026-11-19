@@ -17,6 +17,7 @@
 
 package org.apache.seatunnel.connectors.seatunnel.jdbc.internal.converter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.seatunnel.api.table.catalog.TableSchema;
 import org.apache.seatunnel.api.table.type.ArrayType;
 import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
@@ -29,10 +30,7 @@ import org.apache.seatunnel.connectors.seatunnel.jdbc.exception.JdbcConnectorErr
 import org.apache.seatunnel.connectors.seatunnel.jdbc.exception.JdbcConnectorException;
 import org.apache.seatunnel.connectors.seatunnel.jdbc.utils.JdbcFieldTypeUtils;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Nullable;
-
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Date;
@@ -65,6 +63,8 @@ public abstract class AbstractJdbcRowConverter implements JdbcRowConverter {
     protected static final LocalDate[] TYPE_ARRAY_LOCAL_DATE = new LocalDate[0];
     protected static final LocalDateTime[] TYPE_ARRAY_LOCAL_DATETIME = new LocalDateTime[0];
 
+    private String stringMandatoryEncoding;
+
     public abstract String converterName();
 
     public AbstractJdbcRowConverter() {}
@@ -79,7 +79,9 @@ public abstract class AbstractJdbcRowConverter implements JdbcRowConverter {
             int resultSetIndex = fieldIndex + 1;
             switch (seaTunnelDataType.getSqlType()) {
                 case STRING:
-                    fields[fieldIndex] = JdbcFieldTypeUtils.getString(rs, resultSetIndex);
+                    fields[fieldIndex] =
+                            JdbcFieldTypeUtils.getString(
+                                    rs, resultSetIndex, stringMandatoryEncoding);
                     break;
                 case BOOLEAN:
                     fields[fieldIndex] = JdbcFieldTypeUtils.getBoolean(rs, resultSetIndex);
@@ -367,5 +369,10 @@ public abstract class AbstractJdbcRowConverter implements JdbcRowConverter {
     protected void writeTimestamp(PreparedStatement statement, int index, LocalDateTime value)
             throws SQLException {
         statement.setTimestamp(index, Timestamp.valueOf(value));
+    }
+
+    @Override
+    public void setStringMandatoryEncoding(String stringMandatoryEncoding) {
+        this.stringMandatoryEncoding = stringMandatoryEncoding;
     }
 }

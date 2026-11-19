@@ -82,6 +82,7 @@ public class JdbcInputFormat implements Serializable {
                 ChunkSplitter.create(config),
                 tables,
                 config.getJdbcConnectionConfig().isAutoCommit());
+        this.jdbcRowConverter.setStringMandatoryEncoding(config.getStringMandatoryEncoding());
     }
 
     JdbcInputFormat(

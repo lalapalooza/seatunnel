@@ -21,7 +21,6 @@ import org.apache.seatunnel.api.table.catalog.TableSchema;
 import org.apache.seatunnel.api.table.type.SeaTunnelRow;
 
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,4 +53,6 @@ public interface JdbcRowConverter extends Serializable {
             throws SQLException {
         return toExternal(tableSchema, row, statement);
     }
+
+    void setStringMandatoryEncoding(String stringMandatoryEncoding);
 }
