@@ -24,7 +24,6 @@ import org.apache.seatunnel.api.table.type.BasicType;
 import org.apache.seatunnel.api.table.type.RowKind;
 import org.apache.seatunnel.api.table.type.SeaTunnelRow;
 import org.apache.seatunnel.api.table.type.SeaTunnelRowAccessor;
-import org.apache.seatunnel.common.utils.JsonUtils;
 import org.apache.seatunnel.transform.common.SingleFieldOutputTransform;
 
 import lombok.NonNull;
@@ -89,6 +88,6 @@ public class DeleteRowKindExtractorTransform extends SingleFieldOutputTransform 
                     String.format("field name %s already exists", customFieldName));
         }
         return PhysicalColumn.of(
-                customFieldName, BasicType.INT_TYPE, 2, true, 0, "the row kind flag");
+                customFieldName, BasicType.INT_TYPE, 2L, 0, true, 0, "the row kind flag");
     }
 }
