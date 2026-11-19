@@ -150,5 +150,10 @@ class InsertOrUpdateBatchStatementExecutorTest {
             assertSame(statement, toExternal(tableSchema, row, statement));
             return statement;
         }
+
+        @Override
+        public void setStringMandatoryEncoding(String stringMandatoryEncoding) {
+            // no-op
+        }
     }
 }
